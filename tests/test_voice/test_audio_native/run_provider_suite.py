@@ -34,25 +34,27 @@ def run_and_summarize() -> int:
     with tempfile.NamedTemporaryFile(suffix=".xml", delete=False) as f:
         xml_path = f.name
 
-    subprocess.run(
-        [
-            sys.executable,
-            "-m",
-            "pytest",
-            SUITE,
-            f"--junitxml={xml_path}",
-            "-n",
-            "4",
-            "-p",
-            "no:warnings",
-            "-q",
-        ],
-        capture_output=True,
-    )
+    try:
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                SUITE,
+                f"--junitxml={xml_path}",
+                "-n",
+                "4",
+                "-p",
+                "no:warnings",
+                "-q",
+            ],
+            capture_output=True,
+        )
 
-    tree = ET.parse(xml_path)
-    root = tree.getroot()
-    Path(xml_path).unlink(missing_ok=True)
+        tree = ET.parse(xml_path)
+        root = tree.getroot()
+    finally:
+        Path(xml_path).unlink(missing_ok=True)
 
     results = []
     for tc in root.iter("testcase"):
