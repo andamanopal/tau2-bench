@@ -58,6 +58,8 @@ from tau2.environment.tool import Tool
 from tau2.voice.audio_native.adapter import DiscreteTimeAdapter, create_adapter
 from tau2.voice.audio_native.tick_result import TickResult
 
+pytestmark = pytest.mark.full_duplex_integration
+
 # =============================================================================
 # Provider parameterization
 # =============================================================================
