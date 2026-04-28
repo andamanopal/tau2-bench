@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>τ-voice | τ-bench</title>
-  <meta name="description" content="τ-voice is a benchmark for live voice agents on grounded customer-service tasks. We measure the gap between voice and text agents, the impact of realistic audio, and how fast voice models are improving.">
+  <meta name="description" content="τ-voice is a benchmark for real-time voice agents on grounded customer-service tasks. We measure the gap between voice and text agents, the impact of realistic audio, and how fast voice models are improving.">
   <style>
     /* ========================================================
        Base / typography — matches tau-knowledge.html
@@ -301,37 +301,68 @@
     .ab-cell-mid { background: #f8fafc; color: #4a5568; }
     .ab-delta { font-size: 11px; color: #94a3b8; margin-left: 3px; }
 
-    /* Error analysis stacked bars */
+    /* Error analysis: per-cohort breakdown */
     .ea-cohort {
-      padding: 16px 24px; border-bottom: 1px solid #edf2f7;
+      padding: 18px 24px; border-bottom: 1px solid #edf2f7;
     }
     .ea-cohort:last-child { border-bottom: none; }
     .ea-cohort-title {
-      font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 10px;
+      font-size: 13px; font-weight: 700; color: #1a202c; margin-bottom: 6px;
     }
-    .ea-cohort-sub { font-size: 12px; color: #718096; margin-bottom: 12px; }
-    .ea-row {
-      display: grid; grid-template-columns: 64px 1fr 66px;
-      align-items: center; gap: 12px; margin-bottom: 6px;
+    .ea-cohort-sub {
+      font-size: 12px; color: #718096; margin-bottom: 14px;
+      line-height: 1.5;
     }
-    .ea-row-label { font-size: 12.5px; font-weight: 600; color: #1a202c; }
-    .ea-row-bar {
-      position: relative; height: 22px; border-radius: 5px; overflow: hidden;
-      background: #f1f5f9; display: flex;
+    /* Top-level Agent vs User split bar */
+    .ea-split {
+      display: flex; height: 22px; border-radius: 5px; overflow: hidden;
+      margin-bottom: 18px; border: 1px solid #e2e8f0;
     }
-    .ea-seg {
-      position: relative; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 10.5px; font-weight: 700; color: #fff; min-width: 0;
+    .ea-split-seg {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.02em;
     }
-    .ea-row-total {
-      font-size: 12px; font-weight: 700; color: #1a202c; font-variant-numeric: tabular-nums; text-align: right;
+    .ea-split-agent { background: #475569; color: #ffffff; }
+    .ea-split-user  { background: #e2e8f0; color: #334155; }
+    /* Section (Agent · N (X%) / User · N (X%)) */
+    .ea-section { margin-top: 10px; }
+    .ea-section:first-of-type { margin-top: 0; }
+    .ea-section-head {
+      display: flex; align-items: baseline; gap: 8px;
+      font-size: 12px; font-weight: 700; color: #1a202c;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      margin-bottom: 8px;
     }
-    .ea-legend {
-      display: flex; flex-wrap: wrap; gap: 4px 14px; padding: 10px 24px 16px;
-      font-size: 11.5px; color: #4a5568;
+    .ea-section-head-meta {
+      font-weight: 500; color: #94a3b8; font-size: 11px;
+      letter-spacing: 0.02em; text-transform: none;
     }
-    .ea-legend-item { display: inline-flex; align-items: center; gap: 5px; }
-    .ea-legend-sw { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+    /* One row per failure category */
+    .ea-cat-row {
+      display: grid;
+      grid-template-columns: 12px 150px minmax(0, 1fr) 36px 38px;
+      align-items: center; gap: 10px;
+      font-size: 12px; padding: 3px 0;
+    }
+    .ea-cat-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .ea-cat-name { color: #334155; }
+    .ea-cat-bar {
+      position: relative; height: 8px; background: #f1f5f9; border-radius: 4px;
+      overflow: hidden;
+    }
+    .ea-cat-fill {
+      position: absolute; left: 0; top: 0; bottom: 0; border-radius: 4px;
+    }
+    .ea-cat-count {
+      text-align: right; font-variant-numeric: tabular-nums;
+      color: #718096; font-size: 11.5px;
+    }
+    .ea-cat-pct {
+      text-align: right; font-variant-numeric: tabular-nums;
+      font-weight: 700; color: #1a202c;
+    }
 
     /* Failure mode cards */
     .fm-grid {
@@ -454,9 +485,8 @@
       .blog-content { font-size: 1rem; }
 
       .pp-row { grid-template-columns: 70px 1fr 90px; }
+      .ea-cat-row { grid-template-columns: 12px 110px minmax(0, 1fr) 32px 38px; gap: 8px; }
       .fm-grid { grid-template-columns: 1fr; }
-      .ea-row { grid-template-columns: 56px 1fr 56px; }
-
       .explore-cta { flex-direction: column; text-align: center; gap: 12px; padding: 16px 20px; }
       .explore-cta-btn { width: 100%; justify-content: center; }
     }
@@ -498,7 +528,7 @@
 
     <header class="blog-header">
       <span class="blog-badge">Research</span>
-      <h1 class="blog-title"><span class="tau-symbol">τ</span>-voice: benchmarking live voice agents on real-world tasks</h1>
+      <h1 class="blog-title"><span class="tau-symbol">τ</span>-voice: benchmarking real-time voice agents on real-world tasks</h1>
       <p class="blog-subtitle">A reproducible testbed for voice agents that need to listen, speak, reason, and act &mdash; under realistic phone conditions, on tasks that have a verifiable right answer.</p>
       <p class="blog-meta">April 2026 · Sierra Research · <a href="https://arxiv.org/abs/2603.13686" target="_blank" rel="noopener noreferrer">Paper</a> · <a href="https://github.com/sierra-research/tau2-bench" target="_blank" rel="noopener noreferrer">GitHub</a></p>
     </header>
@@ -509,7 +539,7 @@
       <div class="tldr-box">
         <div class="tldr-label">TL;DR</div>
         <p>
-          <strong>τ-voice</strong> is a benchmark for live voice agents on <strong>278 grounded customer-service tasks</strong> across retail, airline, and telecom. It pairs deterministic, end-to-end task scoring with realistic, controllable audio &mdash; diverse personas, environmental noise, and free-form turn-taking. It does this by inheriting the tasks, tools, policy documents, and evaluator from <strong>τ-bench</strong>, so every voice number here can be read directly against its text counterpart.
+          <strong>τ-voice</strong> is a benchmark for real-time voice agents on <strong>278 grounded customer-service tasks</strong> across retail, airline, and telecom. It pairs deterministic, end-to-end task scoring with realistic, controllable audio &mdash; diverse personas, environmental noise, and free-form turn-taking. It does this by inheriting the tasks, tools, policy documents, and evaluator from <strong>τ-bench</strong>, so every voice number here can be read directly against its text counterpart.
         </p>
         <p>
           The voice frontier on τ-voice has moved from <strong>~30% pass@1</strong> in late 2025 to <strong>~67%</strong> today, against a current text ceiling of <strong>~85%</strong> &mdash; voice now retains about <strong>~79%</strong> of text capability (up from ~45% eight months earlier) and the latest jump (<strong>+29&nbsp;pp</strong> in roughly two months) tracks the same reasoning-unlocks-tool-use pattern that played out in text. Across the failure analysis, <strong>79&ndash;90%</strong> of failures are genuine agent errors, not simulator artefacts. The benchmark is doing what we hoped: surfacing real, fast progress on real tasks.
@@ -567,7 +597,7 @@
       <div class="demo-block" id="pipeline-figure">
         <div class="demo-label"><span class="fig-num">Fig 2</span><span class="demo-label-icon">🎙</span> Audio generation pipeline</div>
         <div class="pipeline-wrap">
-          <svg class="pipeline-svg" viewBox="0 0 980 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Audio generation pipeline">
+          <svg class="pipeline-svg" viewBox="0 0 980 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Audio generation pipeline">
             <defs>
               <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
                 <path d="M0,0 L10,5 L0,10 Z" fill="#94a3b8"/>
@@ -587,25 +617,29 @@
 
             <g font-family="-apple-system, sans-serif" fill="#1a202c">
 
-              <!-- ===== Sources column (left) ===== -->
-              <g font-size="12">
-                <text x="40" y="58" text-anchor="middle" font-size="22">📚</text>
-                <text x="100" y="62" text-anchor="middle" font-weight="600">Audio library</text>
+              <!-- ===== Sources column (left) =====
+                   Three white boxes with light-grey borders, mirroring the
+                   look of the generator and channel boxes for consistency. -->
 
-                <text x="40" y="148" text-anchor="middle" font-size="22">⏱</text>
-                <text x="100" y="142" text-anchor="middle" font-weight="600">Scheduler</text>
-                <text x="100" y="156" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">Poisson</text>
+              <!-- Audio library -->
+              <rect x="15" y="50" width="130" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="40" y="77" font-size="18">📚</text>
+              <text x="98" y="74" text-anchor="middle" font-size="11.5" font-weight="600">Audio library</text>
 
-                <text x="40" y="238" text-anchor="middle" font-size="22">🗣</text>
-                <text x="100" y="234" text-anchor="middle" font-weight="600">Voice Personas</text>
-                <text x="100" y="248" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">7 personas</text>
-              </g>
+              <!-- Scheduler -->
+              <rect x="15" y="125" width="130" height="40" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="40" y="152" font-size="18">⏱</text>
+              <text x="98" y="149" text-anchor="middle" font-size="11.5" font-weight="600">Scheduler</text>
 
-              <!-- Simulated user message label + arrow into Voice Personas -->
-              <g>
-                <text x="20" y="296" font-size="11" font-style="italic" fill="#475569">Simulated user message</text>
-                <path d="M 100 286 L 100 252" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
-              </g>
+              <!-- Voice Personas (taller box for sub-label) -->
+              <rect x="15" y="200" width="130" height="58" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+              <text x="40" y="234" font-size="18">🗣</text>
+              <text x="98" y="225" text-anchor="middle" font-size="11.5" font-weight="600">Voice Personas</text>
+              <text x="98" y="241" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">7 personas</text>
+
+              <!-- Simulated user message → Voice Personas box bottom -->
+              <text x="15" y="290" font-size="11" font-style="italic" fill="#475569">Simulated user message</text>
+              <path d="M 100 280 L 100 260" fill="none" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
 
               <!-- ===== Generators container ===== -->
               <rect x="180" y="35" width="290" height="240" rx="14" fill="url(#genGrad)" stroke="#cbd5e1" stroke-width="1.2"/>
@@ -617,26 +651,41 @@
 
               <!-- Bursts (intermittent → dashed) -->
               <rect x="200" y="105" width="250" height="40" rx="6" fill="#ffffff" stroke="#f59e0b" stroke-width="1.6" stroke-dasharray="5 3"/>
-              <text x="325" y="130" text-anchor="middle" font-size="13" font-weight="600">Bursts</text>
+              <text x="325" y="123" text-anchor="middle" font-size="13" font-weight="600">Bursts</text>
+              <text x="325" y="138" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">Poisson</text>
 
               <!-- Out-of-turn Speech (intermittent → dashed) -->
               <rect x="200" y="155" width="250" height="40" rx="6" fill="#ffffff" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="5 3"/>
-              <text x="325" y="180" text-anchor="middle" font-size="13" font-weight="600">Out-of-turn Speech</text>
+              <text x="325" y="173" text-anchor="middle" font-size="13" font-weight="600">Out-of-turn Speech</text>
+              <text x="325" y="188" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">Poisson</text>
 
               <!-- Speech (intermittent → dashed; main user voice) -->
               <rect x="200" y="205" width="250" height="40" rx="6" fill="#ffffff" stroke="#10b981" stroke-width="1.6" stroke-dasharray="5 3"/>
               <text x="325" y="230" text-anchor="middle" font-size="13" font-weight="600">Speech</text>
 
-              <!-- Source → Generator connectors -->
+              <!-- Source → Generator connectors. Each starts at the right
+                   edge (x=145) of its source box, midline of the box. -->
               <g fill="none">
-                <!-- Audio library → Background Noise (solid, continuous source) -->
-                <line x1="155" y1="62" x2="200" y2="75" stroke="#cbd5e1" stroke-width="1.4" marker-end="url(#arrLight)"/>
-                <!-- Scheduler → Bursts (dashed) -->
-                <line x1="155" y1="142" x2="200" y2="125" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
-                <!-- Scheduler → Out-of-turn Speech (dashed) -->
-                <line x1="155" y1="148" x2="200" y2="175" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
-                <!-- Voice Personas → Speech (dashed; turn-driven) -->
-                <line x1="155" y1="234" x2="200" y2="225" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
+                <!-- Audio library (y=70) → Background Noise (y=75) -->
+                <line x1="145" y1="70"  x2="200" y2="75"  stroke="#cbd5e1" stroke-width="1.4" marker-end="url(#arrLight)"/>
+                <!-- Scheduler (y=145) → Bursts (y=125) -->
+                <line x1="145" y1="142" x2="200" y2="125" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
+                <!-- Scheduler (y=145) → Out-of-turn Speech (y=175) -->
+                <line x1="145" y1="148" x2="200" y2="175" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
+                <!-- Voice Personas (y=229) → Speech (y=225) -->
+                <line x1="145" y1="229" x2="200" y2="225" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrLight)"/>
+              </g>
+
+              <!-- Scheduler → Dynamic Muffling and Frame Drops (Gilbert-Elliott).
+                   Exits the LEFT edge of the Scheduler box, drops down the
+                   far-left strip (x=5, clear of Voice Personas), runs along
+                   the figure bottom, and climbs up into each destination.
+                   Scheduling type itself is labelled inside the destination box. -->
+              <g fill="none" stroke="#cbd5e1" stroke-width="1.4" stroke-dasharray="4 3">
+                <path d="M 15 145 L 5 145 L 5 355 L 610 355"/>
+                <line x1="610" y1="355" x2="610" y2="175" marker-end="url(#arrLight)"/>
+                <path d="M 610 355 L 800 355" />
+                <line x1="800" y1="355" x2="800" y2="216" marker-end="url(#arrLight)"/>
               </g>
 
               <!-- ===== Mixer ⊕ =====
@@ -655,15 +704,15 @@
               <line x1="510" y1="145" x2="510" y2="165" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
 
               <!-- Mixer → Dynamic Muffling -->
-              <line x1="532" y1="155" x2="558" y2="155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
+              <line x1="532" y1="155" x2="545" y2="155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
 
               <!-- Dynamic Muffling box (intermittent → dashed) -->
-              <rect x="558" y="135" width="115" height="40" rx="6" fill="#ffffff" stroke="#fb923c" stroke-width="1.6" stroke-dasharray="5 3"/>
-              <text x="615" y="155" text-anchor="middle" font-size="12.5" font-weight="600">Dynamic</text>
-              <text x="615" y="170" text-anchor="middle" font-size="12.5" font-weight="600">Muffling</text>
+              <rect x="545" y="135" width="130" height="40" rx="6" fill="#ffffff" stroke="#fb923c" stroke-width="1.6" stroke-dasharray="5 3"/>
+              <text x="610" y="153" text-anchor="middle" font-size="12.5" font-weight="600">Dynamic Muffling</text>
+              <text x="610" y="168" text-anchor="middle" font-size="10" font-weight="500" fill="#64748b">Gilbert&ndash;Elliott</text>
 
               <!-- Dynamic Muffling → Channel Degradation -->
-              <line x1="673" y1="155" x2="700" y2="155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
+              <line x1="675" y1="155" x2="700" y2="155" stroke="#94a3b8" stroke-width="1.4" marker-end="url(#arr)"/>
 
               <!-- ===== Channel Degradation container ===== -->
               <rect x="700" y="60" width="200" height="190" rx="14" fill="url(#chanGrad)" stroke="#fca5a5" stroke-width="1.2"/>
@@ -693,8 +742,8 @@
               </g>
               <text x="954" y="195" text-anchor="middle" font-size="10" fill="#64748b">to agent</text>
 
-              <!-- ===== Legend (bottom) ===== -->
-              <g transform="translate(490, 305)" font-size="11" fill="#475569">
+              <!-- ===== Legend (top-right, above Channel Degradation) ===== -->
+              <g transform="translate(720, 28)" font-size="11" fill="#475569">
                 <rect x="0"   y="-9" width="14" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
                 <text x="22"  y="2" font-weight="600">continuous</text>
                 <rect x="120" y="-9" width="14" height="14" rx="3" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3 2"/>
@@ -813,24 +862,53 @@
           <div class="ea-cohort-title">Voice-Fragile cohort &mdash; 43 failures</div>
           <div class="ea-cohort-sub">Tasks both text models pass, but a majority of voice-Clean providers fail. Isolates the cost of going voice-native.</div>
 
-          <div class="ea-row">
-            <div class="ea-row-label">Agent</div>
-            <div class="ea-row-bar">
-              <div class="ea-seg" style="width: 30.2%; background: #b91c1c;" title="Logical (13)">Logical 13</div>
-              <div class="ea-seg" style="width: 23.3%; background: #d97706;" title="Transcription (10)">Trans. 10</div>
-              <div class="ea-seg" style="width: 14.0%; background: #7c3aed;" title="Hallucination (6)">Hall. 6</div>
-              <div class="ea-seg" style="width: 9.3%; background: #2563eb;" title="Timeout (4)">T 4</div>
-              <div class="ea-seg" style="width: 2.3%; background: #0891b2;" title="VAD/Unresponsive (1)"></div>
-            </div>
-            <div class="ea-row-total">34&nbsp;(79%)</div>
+          <div class="ea-split">
+            <div class="ea-split-seg ea-split-agent" style="width: 79%;">Agent &middot; 79%</div>
+            <div class="ea-split-seg ea-split-user"  style="width: 21%;">User &middot; 21%</div>
           </div>
 
-          <div class="ea-row">
-            <div class="ea-row-label">User</div>
-            <div class="ea-row-bar">
-              <div class="ea-seg" style="width: 20.9%; background: #94a3b8;" title="User logical (9)">User logical 9</div>
+          <div class="ea-section">
+            <div class="ea-section-head">Agent failures <span class="ea-section-head-meta">34 of 43</span></div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#b91c1c"></span>
+              <span class="ea-cat-name">Logical</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:100%; background:#b91c1c"></div></div>
+              <span class="ea-cat-count">13</span><span class="ea-cat-pct">30%</span>
             </div>
-            <div class="ea-row-total">9&nbsp;(21%)</div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#d97706"></span>
+              <span class="ea-cat-name">Transcription</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:77%; background:#d97706"></div></div>
+              <span class="ea-cat-count">10</span><span class="ea-cat-pct">23%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#7c3aed"></span>
+              <span class="ea-cat-name">Hallucination</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:46%; background:#7c3aed"></div></div>
+              <span class="ea-cat-count">6</span><span class="ea-cat-pct">14%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#2563eb"></span>
+              <span class="ea-cat-name">Timeout</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:31%; background:#2563eb"></div></div>
+              <span class="ea-cat-count">4</span><span class="ea-cat-pct">9%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#0891b2"></span>
+              <span class="ea-cat-name">VAD / unresponsive</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:8%; background:#0891b2"></div></div>
+              <span class="ea-cat-count">1</span><span class="ea-cat-pct">2%</span>
+            </div>
+          </div>
+
+          <div class="ea-section">
+            <div class="ea-section-head">User-simulator failures <span class="ea-section-head-meta">9 of 43</span></div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#94a3b8"></span>
+              <span class="ea-cat-name">Logical</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:69%; background:#94a3b8"></div></div>
+              <span class="ea-cat-count">9</span><span class="ea-cat-pct">21%</span>
+            </div>
           </div>
         </div>
 
@@ -838,35 +916,60 @@
           <div class="ea-cohort-title">Noise-Fragile cohort &mdash; 48 failures</div>
           <div class="ea-cohort-sub">Tasks voice-Clean passes but voice-Realistic fails. Isolates the marginal cost of realistic acoustic conditions.</div>
 
-          <div class="ea-row">
-            <div class="ea-row-label">Agent</div>
-            <div class="ea-row-bar">
-              <div class="ea-seg" style="width: 33.3%; background: #b91c1c;" title="Logical (16)">Logical 16</div>
-              <div class="ea-seg" style="width: 33.3%; background: #d97706;" title="Transcription (16)">Trans. 16</div>
-              <div class="ea-seg" style="width: 12.5%; background: #7c3aed;" title="Hallucination (6)">Hall. 6</div>
-              <div class="ea-seg" style="width: 8.3%; background: #0891b2;" title="VAD/Unresponsive (4)">VAD 4</div>
-              <div class="ea-seg" style="width: 2.0%; background: #2563eb;" title="Timeout (1)"></div>
-            </div>
-            <div class="ea-row-total">43&nbsp;(90%)</div>
+          <div class="ea-split">
+            <div class="ea-split-seg ea-split-agent" style="width: 90%;">Agent &middot; 90%</div>
+            <div class="ea-split-seg ea-split-user"  style="width: 10%;">User &middot; 10%</div>
           </div>
 
-          <div class="ea-row">
-            <div class="ea-row-label">User</div>
-            <div class="ea-row-bar">
-              <div class="ea-seg" style="width: 8.3%; background: #94a3b8;" title="Early termination (4)">Early 4</div>
-              <div class="ea-seg" style="width: 2.0%; background: #cbd5e1;" title="User logical (1)"></div>
+          <div class="ea-section">
+            <div class="ea-section-head">Agent failures <span class="ea-section-head-meta">43 of 48</span></div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#b91c1c"></span>
+              <span class="ea-cat-name">Logical</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:100%; background:#b91c1c"></div></div>
+              <span class="ea-cat-count">16</span><span class="ea-cat-pct">33%</span>
             </div>
-            <div class="ea-row-total">5&nbsp;(10%)</div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#d97706"></span>
+              <span class="ea-cat-name">Transcription</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:100%; background:#d97706"></div></div>
+              <span class="ea-cat-count">16</span><span class="ea-cat-pct">33%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#7c3aed"></span>
+              <span class="ea-cat-name">Hallucination</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:38%; background:#7c3aed"></div></div>
+              <span class="ea-cat-count">6</span><span class="ea-cat-pct">12%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#0891b2"></span>
+              <span class="ea-cat-name">VAD / unresponsive</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:25%; background:#0891b2"></div></div>
+              <span class="ea-cat-count">4</span><span class="ea-cat-pct">8%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#2563eb"></span>
+              <span class="ea-cat-name">Timeout</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:6%; background:#2563eb"></div></div>
+              <span class="ea-cat-count">1</span><span class="ea-cat-pct">2%</span>
+            </div>
           </div>
-        </div>
 
-        <div class="ea-legend">
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#b91c1c"></span>Agent · Logical</span>
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#d97706"></span>Agent · Transcription</span>
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#7c3aed"></span>Agent · Hallucination</span>
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#0891b2"></span>Agent · VAD / unresponsive</span>
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#2563eb"></span>Agent · Timeout</span>
-          <span class="ea-legend-item"><span class="ea-legend-sw" style="background:#94a3b8"></span>User simulator</span>
+          <div class="ea-section">
+            <div class="ea-section-head">User-simulator failures <span class="ea-section-head-meta">5 of 48</span></div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#94a3b8"></span>
+              <span class="ea-cat-name">Early termination</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:25%; background:#94a3b8"></div></div>
+              <span class="ea-cat-count">4</span><span class="ea-cat-pct">8%</span>
+            </div>
+            <div class="ea-cat-row">
+              <span class="ea-cat-dot" style="background:#94a3b8"></span>
+              <span class="ea-cat-name">Logical</span>
+              <div class="ea-cat-bar"><div class="ea-cat-fill" style="width:6%; background:#94a3b8"></div></div>
+              <span class="ea-cat-count">1</span><span class="ea-cat-pct">2%</span>
+            </div>
+          </div>
         </div>
         <div class="chart-note">
           Across both cohorts, <strong>79&ndash;90% of failures are agent errors</strong>. In the Voice-Fragile cohort the most common single bucket is reasoning failure even when transcription is fine; in the Noise-Fragile cohort transcription failures and reasoning failures are tied. <strong>Authentication is the dominant bottleneck in both</strong>: agents fail to transcribe a name or email even when it's spelled letter by letter, and everything downstream falls over.
