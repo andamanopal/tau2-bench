@@ -9,7 +9,8 @@
     "gemini-3-flash_sierra_2026-03-02",
     "gemini-3-pro_sierra_2026-03-02",
     "distyl-buttonagent_distyl_2026-03-25",
-    "gpt-5-4_sierra_2026-03-25"
+    "gpt-5-4_sierra_2026-03-25",
+    "raft-30b-a3b_neu_2026-04-29"
   ],
   "voice_submissions": [
     "gpt-realtime-1.5_sierra_2026-03-03",
@@ -19,7 +20,6 @@
     "gemini-3-1-flash-live-preview-thinking-high_google_2026-04-02",
     "gemini-3-1-flash-live-preview-thinking-minimal_google_2026-04-13",
     "gpt-realtime-1-0_openai_2026-04-13"
-
   ],
   "legacy_submissions": [
     "claude-3-7-sonnet_anthropic_2024-06-20",
